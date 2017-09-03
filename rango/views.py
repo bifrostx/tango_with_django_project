@@ -1,3 +1,4 @@
+from datetime import datetime
 from rango.forms import CategoryForm, PageForm, UserProfileForm, UserForm
 from django.shortcuts import render
 from django.contrib.auth import authenticate, login, logout
@@ -14,10 +15,15 @@ def index(request):
     page_list = Page.objects.order_by('-views')[:5]
     context_dict = {'categories': category_list,
                     'pages': page_list}
-    return render(request, 'rango/index.html', context=context_dict)
+
+    response =  render(request, 'rango/index.html', context=context_dict)
+
+    visitor_cookie_handler(request, response)
+    return response
 
 
 def about(request):
+
     context_dict = {'author': "Han Xin"}
     return render(request, 'rango/about.html', context=context_dict)
 
@@ -144,3 +150,20 @@ def user_logout(request):
 def restricted(request):
 
     return render(request, 'rango/restricted.html', {})
+
+
+def visitor_cookie_handler(request, response):
+    visits = int(request.COOKIES.get('visits', '1'))
+
+    last_visit_cookie = request.COOKIES.get('last_visit', str(datetime.now()))
+    last_visit_time = datetime.strptime(last_visit_cookie[:-7],
+                                       '%Y-%m-%d %H:%M:%S')
+
+    if (datetime.now() - last_visit_time).seconds > 5:
+        visits = visits + 1
+        response.set_cookie('last_visit', str(datetime.now()))
+    else:
+        # visits = 1
+        response.set_cookie('last_visit', last_visit_cookie)
+
+    response.set_cookie('visits', visits)
