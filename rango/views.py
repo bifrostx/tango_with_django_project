@@ -6,6 +6,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect, HttpResponse
 from django.core.urlresolvers import reverse
 from registration.backends.simple.views import RegistrationView
+from rango.bing_search import bing_search
 
 from rango.models import Category, Page
 
@@ -188,3 +189,14 @@ def get_server_side_cookie(request, cookie, default_val=None):
     if not val:
         val = default_val
     return val
+
+
+def search(request):
+    result_list = []
+
+    if request.method == 'POST':
+        query = request.POST['query'].strip()
+        if query:
+            result_list = bing_search(query)
+
+    return render(request, 'rango/search.html', {'result_list': result_list})
