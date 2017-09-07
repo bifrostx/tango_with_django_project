@@ -6,7 +6,7 @@ def read_bing_key():
     bing_api_key = None
 
     try:
-        with open('rango\\bing.key', 'r') as f:
+        with open('rango/bing.key', 'r') as f:
             bing_api_key = f.readline()
     except:
         raise IOError('bing.key file not found')
@@ -40,6 +40,6 @@ def main():
     return r
 
 if __name__ == "__main__":
-    print(main())
+    main()
 
 

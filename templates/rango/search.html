@@ -11,8 +11,13 @@
           method="post" action="{% url 'rango:search' %}">
         {% csrf_token %}
         <div class="form-group">
+        {% if query %}
+            <input class="form-control" type="text" size="50"
+                   name="query" value="{{ query }}" id="query" />
+        {% else %}
             <input class="form-control" type="text" size="50"
                    name="query" value="" id="query" />
+        {% endif %}
         </div>
         <button class="btn btn-primary" type="submit" name="submit"
                 value="Search">Search</button>
@@ -25,7 +30,7 @@
         {% for result in result_list %}
             <div class="list-group-item">
                 <h4 class="list-group-item-heading">
-                    <a href="{{ result.link }}">{{ result.title }}</a>
+                    <a href="{{ result.link }}">{{ result.title }} </a>
                 </h4>
                 <p class="list-group-item-text">{{ result.summary}}</p>
             </div>

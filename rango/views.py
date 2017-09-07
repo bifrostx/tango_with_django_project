@@ -193,10 +193,10 @@ def get_server_side_cookie(request, cookie, default_val=None):
 
 def search(request):
     result_list = []
-
+    query = None
     if request.method == 'POST':
         query = request.POST['query'].strip()
         if query:
             result_list = bing_search(query)
 
-    return render(request, 'rango/search.html', {'result_list': result_list})
+    return render(request, 'rango/search.html', {'result_list': result_list, 'query': query})
