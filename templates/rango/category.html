@@ -12,7 +12,7 @@
         {% if pages %}
             <ul>
             {% for page in pages %}
-                <li><a href="{{ page.url }}">{{ page.title }}</a></li>
+                <li><a href="{% url 'rango:goto' %}?page_id={{ page.id }}">{{ page.title }}</a></li>
             {% endfor %}
             </ul>
         {% else %}
@@ -20,8 +20,47 @@
         {% endif %}
         {% if user.is_authenticated %}
             <a href="{% url 'rango:add_page' category.slug %}">Add a page to this category.</a>
+
         {% endif %}
     {% else %}
         The specified category does not exist!
+    {% endif %}
+    {% if user.is_authenticated %}
+    <br />
+    <div>
+        <h4>Search with Rango</h4>
+        <br />
+        <form class="form-inline" id="user_form"
+              method="post" action="{% url 'rango:show_category' category.slug %}">
+            {% csrf_token %}
+            <div class="form-group">
+            {% if query %}
+                <input class="form-control" type="text" size="50"
+                       name="query" value="{{ query }}" id="query" />
+            {% else %}
+                <input class="form-control" type="text" size="50"
+                       name="query" value="" id="query" />
+            {% endif %}
+            </div>
+            <button class="btn btn-primary" type="submit" name="submit"
+                    value="Search">Search</button>
+        </form>
+        <br />
+        <div>
+            {% if result_list %}
+            <h3>Results</h3>
+            <div class="list-group">
+            {% for result in result_list %}
+                <div class="list-group-item">
+                    <h4 class="list-group-item-heading">
+                        <a href="{{ result.link }}">{{ result.title }} </a>
+                    </h4>
+                    <p class="list-group-item-text">{{ result.summary}}</p>
+                </div>
+            {% endfor %}
+            </div>
+            {% endif %}
+        </div>
+    </div>
     {% endif %}
 {% endblock %}

@@ -1,6 +1,6 @@
 from datetime import datetime
 from rango.forms import CategoryForm, PageForm, UserProfileForm, UserForm
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect, HttpResponse
@@ -33,10 +33,11 @@ def about(request):
     
 def show_category(request, category_name_slug):
     context_dict = {}
-    
+    query = None
+
     try:
         category = Category.objects.get(slug=category_name_slug)
-        pages = Page.objects.filter(category=category)
+        pages = Page.objects.filter(category=category).order_by('-views')
         
         context_dict['pages'] = pages
         context_dict['category'] = category
@@ -44,6 +45,12 @@ def show_category(request, category_name_slug):
     except Category.DoesNotExist:
         context_dict['category'] = None
         context_dict['page'] = None
+
+    if request.method == 'POST':
+        query = request.POST['query'].strip()
+        if query:
+            context_dict['result_list'] = bing_search(query)
+            context_dict['query'] = query
     
     return render(request, 'rango/category.html', context_dict)
 
@@ -191,6 +198,8 @@ def get_server_side_cookie(request, cookie, default_val=None):
     return val
 
 
+'''
+# out of date
 def search(request):
     result_list = []
     query = None
@@ -199,4 +208,22 @@ def search(request):
         if query:
             result_list = bing_search(query)
 
-    return render(request, 'rango/search.html', {'result_list': result_list, 'query': query})
+    return render(request, 'rango/category.html', {'result_list': result_list, 'query': query})
+'''
+
+def track_url(request):
+    url = "/rango/"
+    page_id = None
+    if request.method == 'GET':
+        if 'page_id' in request.GET:
+            page_id = request.GET['page_id']
+
+            try:
+                page = Page.objects.get(id = page_id)
+                page.views += 1
+                page.save()
+                url = page.url
+            except:
+                print("get page error")
+
+        return redirect(url)
