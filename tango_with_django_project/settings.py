@@ -135,6 +135,6 @@ LOGIN_URL = '/rango/login/'
 # registration
 REGISTRATION_OPEN = True
 ACCOUNT_ACTIVATION_DAYS = 7
-GEGISTRRATION_AUTO_LOGIN = True
+REGISTRATION_AUTO_LOGIN = True
 LOGIN_REDIRECT_URL = '/rango/'
 LOGIN_URL = '/accounts/login/'

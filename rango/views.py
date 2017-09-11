@@ -162,7 +162,7 @@ def user_logout(request):
 class MyRegistrationView(RegistrationView):
 
     def get_success_url(self, user):
-        return '/rango/'
+        return '/rango/register_profile/'
 
 
 @login_required
@@ -211,6 +211,7 @@ def search(request):
     return render(request, 'rango/category.html', {'result_list': result_list, 'query': query})
 '''
 
+
 def track_url(request):
     url = "/rango/"
     page_id = None
@@ -227,3 +228,23 @@ def track_url(request):
                 print("get page error")
 
         return redirect(url)
+
+
+@login_required
+def register_profile(request):
+    form = UserProfileForm()
+
+    if request.method == 'POST':
+        form = UserProfileForm(request.POST, request.FILES)
+        if form.is_valid():
+            user_profile = form.save(commit=False)
+            user_profile.user = request.user
+            user_profile.save()
+
+            return redirect('rango:index')
+    else:
+        print(form.errors)
+
+    context_dict = {'form': form}
+
+    return render(request, 'rango/profile_registration.html', context_dict)

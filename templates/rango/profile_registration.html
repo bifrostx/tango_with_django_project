@@ -1,0 +1,12 @@
+{% extends "rango/base.html" %}
+{% load staticfiles %}
+{% block title_block %}Registration - Step 2{% endblock %}
+
+{% block body_block %}
+    <h2 class="form-signin-heading">Registration - Step 2</h2>
+    <form method="post" action="." enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <input type="submit" value="Submit" />
+    </form>
+{% endblock %}
