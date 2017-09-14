@@ -7,8 +7,9 @@ from django.http import HttpResponseRedirect, HttpResponse
 from django.core.urlresolvers import reverse
 from registration.backends.simple.views import RegistrationView
 from rango.bing_search import bing_search
+from django.contrib.auth.models import User
 
-from rango.models import Category, Page
+from rango.models import Category, Page, UserProfile
 
 
 def index(request):
@@ -47,6 +48,7 @@ def show_category(request, category_name_slug):
         context_dict['page'] = None
 
     if request.method == 'POST':
+        print("xxxxxxxxxxxxx")
         query = request.POST['query'].strip()
         if query:
             context_dict['result_list'] = bing_search(query)
@@ -87,7 +89,8 @@ def add_page(request, category_name_slug):
                 page.category = category
                 page.views = 0
                 page.save()
-                return show_category(request, category_name_slug)
+                print("ok")
+                return redirect('rango:show_category', category_name_slug)
         else:
             print(form.errors)
             
@@ -248,3 +251,31 @@ def register_profile(request):
     context_dict = {'form': form}
 
     return render(request, 'rango/profile_registration.html', context_dict)
+
+
+@login_required
+def profile(request, username):
+
+    try:
+        user = User.objects.get(username=username)
+    except User.DoesNotExist:
+        return redirect('rango:index')
+
+    user_profile = UserProfile.objects.get_or_create(user=user)[0]
+    form = UserProfileForm(
+        {'website': user_profile.website, 'picture': user_profile.picture}
+    )
+
+    if request.method == 'POST':
+        form = UserProfileForm(request.POST, request.FILES, instance=user_profile)
+        if form.is_valid():
+            form.save(commit=True)
+            return redirect('rango:profile', user.username)
+        else:
+            print("errors")
+            print(form.errors)
+    else:
+        return render(request, 'rango/profile.html',
+                      {'user_profile': user_profile, 'selecteduser': user, 'form': form})
+
+
