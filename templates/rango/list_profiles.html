@@ -1,0 +1,33 @@
+{% extends "rango/base.html" %}
+{% load staticfiles %}
+
+{% block title_block %}User Profiles{% endblock %}
+
+{% block body_block %}
+
+<h1>User Profiles</h1>
+<div class="panel">
+    {% if user_profile_list %}
+    <div class="panel-heading">
+        <div class="panel-body">
+            <div class="list-group">
+                {% for profile in user_profile_list %}
+                <div class="list-group-item">
+                    <h4 class="list-group-item-heading">
+                    {% if profile.picture %}
+                        <img width="64" height="64" src="{{ MEDIA_URL }}{{ profile.picture }}" />
+                    {% else %}
+                        <img width="64" height="64" src="{{ MEDIA_URL }}homer.jpg"/>
+                    {% endif %}
+                        <a href="{% url 'rango:profile' profile.user.username %}">{{ profile.user.username }}</a>
+                    </h4>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    {% else %}
+        <p>There are no users for the site.</p>
+    {% endif %}
+</div>
+{% endblock %}
