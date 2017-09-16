@@ -38,13 +38,20 @@ def populate():
          "views": 5}]
          
     cats = {"Python": {"views": 128, "likes": 64, "pages": python_pages},
-             "Django": {"views": 64, "likes": 32,"pages": django_pages},
+             "Django": {"views": 64, "likes": 32, "pages": django_pages},
+             "Pascal": {"views": 22, "likes": 12, "pages": None},
+             "Perl": {"views": 22, "likes": 12, "pages": None},
+             "PHP": {"views": 22, "likes": 12, "pages": None},
+             "Prolog": {"views": 22, "likes": 12, "pages": None},
+             "PostScript": {"views": 22, "likes": 12, "pages": None},
+             "Programming": {"views": 22, "likes": 12, "pages": None},
              "Other Framework": {"views": 32, "likes": 16,"pages": other_pages}}
              
     for cat, cat_data in cats.items():
         c = add_cat(cat, cat_data["views"], cat_data["likes"])
-        for p in cat_data["pages"]:
-            add_page(c, p["title"], p["url"], p['views'])
+        if cat_data["pages"]:
+            for p in cat_data["pages"]:
+                add_page(c, p["title"], p["url"], p['views'])
     
     # Print out the categories we have added
     for c in Category.objects.all():

@@ -8,6 +8,16 @@
 {% block body_block %}
     {% if category %}
         <h1>{{ category.name }}</h1>
+        <div>
+            <strong id="like_count">{{ category.likes }}</strong> people like this category
+
+            {% if user.is_authenticated %}
+                <button id="likes" data-catid="{{category.id}}"
+                        class="btn btn-primary btn-sm" type="button">
+                    Like
+                </button>
+            {% endif %}
+        </div>
 
         {% if pages %}
             <ul>
@@ -27,6 +37,7 @@
     {% endif %}
     {% if user.is_authenticated %}
     <br />
+    <hr />
     <div>
         <h4>Search with Rango</h4>
         <br />

@@ -22,7 +22,7 @@
         <ul class="list-group">
             {% for category in categories %}
                 <li class="list-group-item"><a href="{% url 'rango:show_category' category.slug %}">
-                    {{ category.name }}</a></li>
+                    {{ category.name }}&nbsp;</a><span class="badge badge-pill badge-primary">{{ category.likes }}</span></li>
             {% endfor %}
         {% else%}
             <strong>There are no categories present.</strong>
@@ -36,8 +36,8 @@
         {% if pages %}
             <ul class="list-group">
             {% for page in pages %}
-                <li class="list-group-item"><a href='{{ page.url }}'>{{ page.title }}</a>
-                 - {{page.views}} views</li>
+                <li class="list-group-item"><a href='{{ page.url }}'>{{ page.title }}&nbsp;</a>
+                    <span class="badge badge-pill badge-primary">{{page.views}}</span></li>
             {% endfor %}
             </ul>
         {% else %}

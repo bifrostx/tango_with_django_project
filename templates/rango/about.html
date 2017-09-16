@@ -15,5 +15,18 @@
         <p>This is the <a href="/">Index</a> page.</p>
         <img src="{{ MEDIA_URL }}cat.jpg" alt="Picture of a cat" />
     </div>
+    <hr />
+    <button class="btn btn-primary"
+            onClick="alert('You clicked the button using JavaScript.');">
+        Click Me - I run JavaScript
+    </button>
+
+    <button id="about-btn">
+        Click Me - I'm Java Script on Speed
+    </button>
+    <div id="msg">Hello - I'm here for a JQuery Example too</div>
+    <p>This is an example</p>
+    <p>This is another example</p>
+    <hr />
     Number of visits: {{ visits }}
 {% endblock %}
