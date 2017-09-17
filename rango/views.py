@@ -48,7 +48,6 @@ def show_category(request, category_name_slug):
         context_dict['page'] = None
 
     if request.method == 'POST':
-        print("xxxxxxxxxxxxx")
         query = request.POST['query'].strip()
         if query:
             context_dict['result_list'] = bing_search(query)
@@ -326,3 +325,25 @@ def suggest_category(request):
     cat_list = get_category_list(8, starts_with)
 
     return render(request, 'rango/suggest_cats.html', {'cats': cat_list})
+
+
+@login_required
+def auto_add_page(request):
+    catid = None
+    title = None
+    url = None
+
+    if request.method == 'GET':
+        title = request.GET['title']
+        url = request.GET['url']
+        catid = request.GET['category_id']
+        if catid:
+            category = Category.objects.get(id=int(catid))
+            p = Page.objects.get_or_create(category=category,
+                                              title=title, url=url)
+            # p.save()
+            pages = Page.objects.filter(category=category).order_by('-views')
+
+        for p in pages:
+            print(p)
+    return render(request, 'rango/page_list.html', {'pages': pages})

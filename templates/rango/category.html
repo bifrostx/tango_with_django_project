@@ -18,7 +18,7 @@
                 </button>
             {% endif %}
         </div>
-
+        <div id="pages">
         {% if pages %}
             <ul>
             {% for page in pages %}
@@ -28,6 +28,7 @@
         {% else %}
             <strong>No pages currently in category.</strong>
         {% endif %}
+        </div>
         {% if user.is_authenticated %}
             <a href="{% url 'rango:add_page' category.slug %}">Add a page to this category.</a>
 
@@ -67,6 +68,10 @@
                         <a href="{{ result.link }}">{{ result.title }} </a>
                     </h4>
                     <p class="list-group-item-text">{{ result.summary}}</p>
+                    <button data-catid="{{category.id}}" data-title="{{result.title}}"
+                            data-url="{{result.link}}" class="rango-add btn btn-primary btn-sm" type="button">
+                    Add
+                    </button>
                 </div>
             {% endfor %}
             </div>
