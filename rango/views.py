@@ -88,7 +88,6 @@ def add_page(request, category_name_slug):
                 page.category = category
                 page.views = 0
                 page.save()
-                print("ok")
                 return redirect('rango:show_category', category_name_slug)
         else:
             print(form.errors)
@@ -224,6 +223,7 @@ def track_url(request):
             try:
                 page = Page.objects.get(id = page_id)
                 page.views += 1
+                # page.last_visit = datetime.now()
                 page.save()
                 url = page.url
             except:
@@ -340,8 +340,8 @@ def auto_add_page(request):
         if catid:
             category = Category.objects.get(id=int(catid))
             p = Page.objects.get_or_create(category=category,
-                                              title=title, url=url)
-            # p.save()
+                  title=title, url=url)[0]
+            p.save()
             pages = Page.objects.filter(category=category).order_by('-views')
 
         for p in pages:
