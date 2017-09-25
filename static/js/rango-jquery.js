@@ -6,11 +6,7 @@ $(document).ready(function() {
         msgstr = msgstr + "ooo"
         $("#msg").html(msgstr)
     });
-    $("p").hover( function() {
-        $(this).css('color', 'red');
-    },
-    function() {
-        $(this).css('color', 'blue');
-    });
+
+    $('ul.navbar-nav > li > a[href="' + document.location.pathname + '"]').parent().addClass('active');
 });
 
